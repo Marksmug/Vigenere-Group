@@ -239,14 +239,14 @@ def compute_ic(keyLength, ciphertext):
 
     return IC
 
-def friedman_test(maxKeyLength, ciphertext):
+def friedman_test(maxKeyLength, ciphertexts):
     # implements the friedman test from the lecture
     # return the m which maximizes IC^m(x)
     print("Friedman Test:")
     max = 0
     m = -1
     for i in range(1, maxKeyLength + 1):
-        ic = compute_ic(i, ciphertext)
+        ic = compute_ic(i, to_long_ciphertext(i, ciphertexts))
         if ic > max:
             max = ic
             m = i
@@ -264,7 +264,7 @@ def break_cipher(filename, maxKeyLength, keyLength=0, key=""):
         # if no key is provided use frequency analysis to find key
         if keyLength <= 0:
             # if no key length is provided use friedman test to find key length
-            keyLength = friedman_test(maxKeyLength, ciphertext)
+            keyLength = friedman_test(maxKeyLength, [ciphertext])
             #kasiski_test(maxKeyLength, ciphertext) # can be used to verify findings from friedman test
         key = frequency_analysis(keyLength, ciphertext)
 
@@ -274,10 +274,52 @@ def break_cipher(filename, maxKeyLength, keyLength=0, key=""):
     decrypt_file(filename + ".key", filename + ".plain", filename + ".crypto")
     # print run time
     print(f"Runtime={time() - start} s")
+
+def break_multiple_ciphers(amountCipherText, dirPath, maxKeyLength, keyLength=0, key=""):
+    # get start time
+    start = time()
+    # read ciphertexts
+    ciphertexts = []
+    for i in range(1, amountCipherText + 1):
+        ciphertexts.append(readFile(dirPath + "/" + str(i) + ".crypto"))
+
+    if len(key) == 0:
+        # if no key is provided use frequency analysis to find key
+        if keyLength <= 0:
+            # if no key length is provided use friedman test to find key length
+            keyLength = friedman_test(maxKeyLength, ciphertexts)
+        key = frequency_analysis(keyLength, to_long_ciphertext(keyLength, ciphertexts))
+
+    # write key
+    writeFile(dirPath + "/long.key", key)
+    # decrypt ciphertexts and write plaintexts
+    for i in range(1, amountCipherText + 1):
+        decrypt_file(dirPath + "/long.key", dirPath + "/" + str(i) + ".plain", dirPath + "/" + str(i) + ".crypto")
+
     
-# use break_cipher
+    print(f"Runtime={time() - start} s")
+
+def to_long_ciphertext(keyLength, ciphertexts):
+    # Concatenates for all ciphertexts the largest possible prefix which size is divisible by the key length.
+    long_ciphertext = ""
+    for ciphertext in ciphertexts:
+        length = len(ciphertext)
+        long_ciphertext += ciphertext[:(length - (length % keyLength))]
+    return long_ciphertext
+
+    
+# use break_cipher to break a single ciphertext
 # filename without file ending must be provided to the ciphertext (file needs to end with .crypto)
 # maxKeyLength needs to be provided or keyLength if the key length is already known (from previous runs)
 # the key can be provided if known
 # this can be usefull if only some characters of the key from the previous run are not correct
-break_cipher(filename="students/vig_group12", maxKeyLength=16)
+break_cipher(filename="students/vig_group2", maxKeyLength=16)
+
+# use break_multiple ciphers to break multiple ciphertexts ecrypted using the same key
+# amountCipherText 
+# dirPath path to the dir containing the ciphertexts (do include "/" at the end of path)
+# the dir must include the ciphertexts named 1.crypto, ..., {amountCipherText}.crypto
+# maxKeyLength needs to be provided or keyLength if the key length is already known (from previous runs)
+# the key can be provided if known
+# this can be usefull if only some characters of the key from the previous run are not correct
+break_multiple_ciphers(amountCipherText=6, dirPath="long-keys", maxKeyLength=150)
