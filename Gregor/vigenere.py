@@ -191,7 +191,7 @@ def kasiski_test(maxKeyLength, ciphertext):
     segments = {segment:positions for (segment, positions) in segments.items() if len(positions) > 1}
 
     distances = {}
-    deltas = set()
+    deltas = list()
 
     # calculate the deltas from the positions of the segments
     for segment, positions in segments.items():
@@ -202,7 +202,7 @@ def kasiski_test(maxKeyLength, ciphertext):
                     distances.update({segment : [distance]})
                 else:
                     distances[segment].append(distance)
-                deltas.add(distance)
+                deltas.append(distance)
 
     # for every m with 1 <= m <= maxKeyLength + 1 count for all detlas how often delta % m == 0
     divisors = {}
