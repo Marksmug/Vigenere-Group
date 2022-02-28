@@ -58,8 +58,8 @@ if __name__ == '__main__':
     result(matrix, diner, t, e, index)
 
     #print design
-    for i in range(e):
-        print(matrix[i])
+    #for i in range(e):
+    #    print(matrix[i])
 
     #output design file
     with open('cruDes.txt', 'w') as f:
