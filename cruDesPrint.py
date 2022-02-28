@@ -20,9 +20,9 @@ if __name__ == '__main__':
         c = int(sys.argv[2])
         e = int(sys.argv[3])
     except IndexError:
-        print('Usage: python3 cruDesPrint.py d c e')
+        print('Usage: cruDes d c e')
 
-    with open("out.txt", "r") as f:
+    with open("out.dimacs", "r") as f:
         input = f.read()
 
     t = int(d/c)
