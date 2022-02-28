@@ -22,7 +22,7 @@ if __name__ == '__main__':
     except IndexError:
         print('Usage: python3 cruDesPrint d c e')
 
-    with open("out.txt", "r") as f:
+    with open("out.dimacs", "r") as f:
         lines = f.readlines()
 
 
