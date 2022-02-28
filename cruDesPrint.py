@@ -20,7 +20,7 @@ if __name__ == '__main__':
         c = int(sys.argv[2])
         e = int(sys.argv[3])
     except IndexError:
-        print('Usage: cruDes d c e')
+        print('Usage: python3 cruDesPrint.py d c e')
 
     with open("out.txt", "r") as f:
         input = f.read()
