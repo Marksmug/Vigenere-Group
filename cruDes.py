@@ -14,8 +14,8 @@
 # forever after.
 #
 
-# Team: ...    # fill in your team number
-# Authors: ... # fill in your names
+# Team: 9    # fill in your team number
+# Authors: Deng Mingwei # fill in your names
 
 # To run this file, you may need to make it executable. On Linux that can be
 # done with: chmod +x cruDes
@@ -161,9 +161,6 @@ def gen_cnf(d: int, c: int, e: int) -> Tuple[int, List[List[int]]]:
             for c4 in range(len(clauses2)):
                 cnf.append(clauses2[c4])
 
-
-
-
     #Constraint 3: diner can only eat with people who have not dined yet
     constraint2 = constrint2(varList, d, e, t)
     for i in range(len(constraint2)):
@@ -194,35 +191,8 @@ def constrint2(varList , d: int, e: int, t: int):
                                     clause = or_imply(noTogether, 1)
                                     clauses.append(clause[0])
 
-    #removeRepeat(clauses)
     return clauses
 
-
-def removeRepeat(clauses):
-    n = len(clauses)
-    removeNumber = 0
-    for i in range(n):
-        for j in range(i+1, n):
-               # sumi = 0
-                #sumj = 0
-                #for k in range(len(clauses[i])):
-                #    sumi = sumi + int(str(clauses[i][k]))
-               #     sumj = sumj + int(clauses[j][k])
-                #if sumi == sumj:
-            str1 = ''.join('%s' %id for id in clauses[i])
-            str2 = ''.join('%s' %id for id in clauses[j])
-            if set(str1) == set(str2):
-                clauses[j] = ['0']
-                removeNumber = removeNumber + 1
-
-    i = 0
-    empty = ['0']
-    while clauses[i] != None:
-        if clauses[i] == empty:
-            clauses.pop(i)
-
-        i = i + 1
-    return clauses
 
 
 if __name__ == "__main__":
@@ -233,10 +203,8 @@ if __name__ == "__main__":
         c = int(sys.argv[2])
         e = int(sys.argv[3])
     except IndexError:
-         print('input error')
-    #d = 16
-    #c = 2
-    #e = 13
+         print('Usage: cruDes d c e')
+
 
     nvar, cnf = gen_cnf(d, c, e)
 
